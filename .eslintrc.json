@@ -59,7 +59,8 @@
           "groups": [
               "/^react/",
               "module",
-              // "/^~/",
+              ["/^expo*/", "/^@expo*/"],
+              ["/^@src/", "/^@components/", "/^@screens/", "/^@assets/"],
               ["parent", "sibling", "index"]
           ],
           "alphabetize": { "order": "asc", "ignoreCase": true }
@@ -67,7 +68,8 @@
       ],
       "camelcase": "off",
       "@typescript-eslint/no-empty-interface": "off",
-      "import/no-unresolved": "off"
+      "import/no-unresolved": "off",
+      "import/prefer-default-export": "warn"
     },
     "settings": {
       "import/resolver": {
