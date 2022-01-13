@@ -60,7 +60,7 @@
               "/^react/",
               "module",
               ["/^expo*/", "/^@expo*/"],
-              ["/^@src/", "/^@components/", "/^@screens/", "/^@assets/"],
+              ["/^@src/", "/^@components/", "/^@screens/", "/^@assets/", "/^@hooks/"],
               ["parent", "sibling", "index"]
           ],
           "alphabetize": { "order": "asc", "ignoreCase": true }
