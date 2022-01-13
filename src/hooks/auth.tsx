@@ -4,10 +4,18 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Alert } from 'react-native';
 
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
+type User = {
+  id: string;
+  name: string;
+  isAdmin: boolean;
+};
 
 type AuthContextData = {
   signIn: (email: string, password: string) => Promise<void>;
   isLogging: boolean;
+  user: User | null;
 };
 
 type AuthProviderProps = {
@@ -17,6 +25,7 @@ type AuthProviderProps = {
 export const AuthContext = createContext({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
+  const [user, setUser] = useState<User | null>(null);
   const [isLogging, setIsLogging] = useState(false);
 
   async function signIn(email: string, password: string) {
@@ -26,23 +35,49 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     setIsLogging(true);
 
-    auth()
+    await auth()
       .signInWithEmailAndPassword(email, password)
       .then(account => {
-        console.log(account);
+        firestore()
+          .collection('users')
+          .doc(account.user.uid)
+          .get()
+          .then(profile => {
+            const { name, isAdmin } = profile.data() as User;
+
+            if (profile.exists) {
+              const userData = {
+                id: account.user.uid,
+                name,
+                isAdmin,
+              };
+
+              setUser(userData);
+            }
+          })
+          .catch(() =>
+            Alert.alert(
+              'Login',
+              'Não foi possível buscar os dados do perfil do usuário.',
+            ),
+          );
       })
       .catch(err => {
         const { code } = err;
 
         if (code === 'auth/user-not-found' || code === 'auth/wrong-password') {
-          return Alert.alert('Login', 'E-mail e/ou senha inválida.');
+          return Alert.alert('Login', 'E-mail e/ou senha inválidos.');
         }
-        return Alert.alert('Login', 'Não foi possível realizar o login.');
+        console.log(err);
+        return Alert.alert(
+          'Login',
+          'Não foi possível realizar o login, por favor tente novamente.',
+        );
       })
       .finally(() => setIsLogging(false));
   }
   return (
-    <AuthContext.Provider value={{ signIn, isLogging }}>
+    <AuthContext.Provider value={{ signIn, isLogging, user }}>
       {children}
     </AuthContext.Provider>
   );

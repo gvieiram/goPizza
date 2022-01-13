@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 
@@ -56,7 +57,7 @@ export default function SignIn() {
           <Button
             title="Entrar"
             type="secondary"
-            onPress={() => handleSignIn}
+            onPress={handleSignIn}
             isLoading={isLogging}
           />
         </Content>
