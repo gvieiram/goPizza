@@ -70,7 +70,7 @@
       "@typescript-eslint/no-empty-interface": "off",
       "import/no-unresolved": "off",
       "import/prefer-default-export": "warn",
-      "react/require-default-props": "warn",
+      "react/require-default-props": "off",
       "react/jsx-props-no-spreading": "off"
     },
     "settings": {
