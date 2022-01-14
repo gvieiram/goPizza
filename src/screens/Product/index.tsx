@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Platform } from 'react-native';
+import { Alert, Platform, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import * as ImagePicker from 'expo-image-picker';
 
+import Button from '@components/Button';
 import { ButtonBack } from '@components/ButtonBack';
+import Input from '@components/Input';
+import { InputPrice } from '@components/InputPrice';
 import { Photo } from '@components/Photo';
 
 import {
@@ -14,10 +17,21 @@ import {
   DeleteLabel,
   Upload,
   PickImageButton,
+  Form,
+  Label,
+  InputGroup,
+  InputGroupHeader,
+  MaxCharacters,
 } from './styles';
 
 export function Product() {
   const [image, setImage] = useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [priceSizeP, setPriceSizeP] = useState('');
+  const [priceSizeM, setPriceSizeM] = useState('');
+  const [priceSizeG, setPriceSizeG] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handlePickerImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -34,6 +48,24 @@ export function Product() {
     }
   }
 
+  async function handleAdd() {
+    if (!name.trim()) {
+      Alert.alert('Cadastro', 'Informe o nome da pizza!');
+    }
+
+    if (!description.trim()) {
+      Alert.alert('Cadastro', 'Informe a descrição da pizza!');
+    }
+
+    if (!image) {
+      Alert.alert('Cadastro', 'Selecione a imagem da pizza!');
+    }
+
+    if (!priceSizeP || !priceSizeM || !priceSizeG) {
+      Alert.alert('Cadastro', 'Informe o preço de todos os tamanhos da pizza!');
+    }
+  }
+
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Header>
@@ -44,15 +76,65 @@ export function Product() {
           <DeleteLabel>Deletar</DeleteLabel>
         </TouchableOpacity>
       </Header>
-      <Upload>
-        <Photo uri={image} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Upload>
+          <Photo uri={image} />
 
-        <PickImageButton
-          title="Carregar"
-          type="secondary"
-          onPress={handlePickerImage}
-        />
-      </Upload>
+          <PickImageButton
+            title="Carregar"
+            type="secondary"
+            onPress={handlePickerImage}
+          />
+        </Upload>
+
+        <Form>
+          <InputGroup>
+            <Label>Nome</Label>
+            <Input onChangeText={setName} value={name} />
+          </InputGroup>
+
+          <InputGroup>
+            <InputGroupHeader>
+              <Label>Descrição</Label>
+              <MaxCharacters>0 de 60 caracteres</MaxCharacters>
+            </InputGroupHeader>
+            <Input
+              multiline
+              maxLength={60}
+              style={{ height: 80 }}
+              onChangeText={setDescription}
+              value={description}
+            />
+          </InputGroup>
+
+          <InputGroup>
+            <Label>Tamanhos e Preços</Label>
+            <InputPrice
+              size="P"
+              onChangeText={setPriceSizeP}
+              value={priceSizeP}
+            />
+
+            <InputPrice
+              size="M"
+              onChangeText={setPriceSizeM}
+              value={priceSizeM}
+            />
+
+            <InputPrice
+              size="G"
+              onChangeText={setPriceSizeG}
+              value={priceSizeG}
+            />
+          </InputGroup>
+
+          <Button
+            title="Cadastrar Pizza"
+            isLoading={isLoading}
+            onPress={handleAdd}
+          />
+        </Form>
+      </ScrollView>
     </Container>
   );
 }
