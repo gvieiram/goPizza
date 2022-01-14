@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Alert, Platform, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+
 import * as ImagePicker from 'expo-image-picker';
 
 import Button from '@components/Button';
@@ -49,20 +52,43 @@ export function Product() {
   }
 
   async function handleAdd() {
-    if (!name.trim()) {
-      Alert.alert('Cadastro', 'Informe o nome da pizza!');
-    }
-
-    if (!description.trim()) {
-      Alert.alert('Cadastro', 'Informe a descrição da pizza!');
-    }
-
     if (!image) {
       Alert.alert('Cadastro', 'Selecione a imagem da pizza!');
-    }
-
-    if (!priceSizeP || !priceSizeM || !priceSizeG) {
+    } else if (!name.trim()) {
+      Alert.alert('Cadastro', 'Informe o nome da pizza!');
+    } else if (!description.trim()) {
+      Alert.alert('Cadastro', 'Informe a descrição da pizza!');
+    } else if (!priceSizeP || !priceSizeM || !priceSizeG) {
       Alert.alert('Cadastro', 'Informe o preço de todos os tamanhos da pizza!');
+    } else {
+      setIsLoading(true);
+
+      const fileName = new Date().getTime();
+      const reference = storage().ref(`/pizzas/${fileName}.png`);
+
+      await reference.putFile(image);
+      const photo_url = await reference.getDownloadURL();
+
+      firestore()
+        .collection('pizzas')
+        .add({
+          name,
+          name_insensitive: name.toLowerCase().trim(),
+          description,
+          prices_sizes: {
+            p: priceSizeP,
+            m: priceSizeM,
+            g: priceSizeG,
+          },
+          photo_url,
+          photo_path: reference.fullPath,
+        })
+        .then(() => Alert.alert('Cadastro', 'Pizza cadastrada com sucesso!'))
+        .catch(() =>
+          Alert.alert('Cadastro', 'Não foi possível cadastrar a pizza.'),
+        );
+
+      setIsLoading(false);
     }
   }
 
@@ -130,6 +156,7 @@ export function Product() {
 
           <Button
             title="Cadastrar Pizza"
+            style={{ marginBottom: 25 }}
             isLoading={isLoading}
             onPress={handleAdd}
           />
