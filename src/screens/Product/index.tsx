@@ -122,7 +122,9 @@ export function Product() {
           <InputGroup>
             <InputGroupHeader>
               <Label>Descrição</Label>
-              <MaxCharacters>0 de 60 caracteres</MaxCharacters>
+              <MaxCharacters>
+                {description.length} de 60 caracteres
+              </MaxCharacters>
             </InputGroupHeader>
             <Input
               multiline
