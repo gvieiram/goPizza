@@ -69,7 +69,7 @@
       "camelcase": "off",
       "@typescript-eslint/no-empty-interface": "off",
       "import/no-unresolved": "off",
-      "import/prefer-default-export": "warn",
+      "import/prefer-default-export": "off",
       "react/require-default-props": "off",
       "react/jsx-props-no-spreading": "off",
       "react/jsx-no-bind": "off"
