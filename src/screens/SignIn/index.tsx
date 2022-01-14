@@ -18,10 +18,14 @@ import {
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signIn, isLogging } = useAuth();
+  const { signIn, isLogging, forgotPassword } = useAuth();
 
   function handleSignIn() {
     signIn(email, password);
+  }
+
+  function handleForgotPassword() {
+    forgotPassword(email);
   }
 
   return (
@@ -49,7 +53,10 @@ export default function SignIn() {
             onChangeText={setPassword}
           />
 
-          <ForgotPasswordButton activeOpacity={0.7}>
+          <ForgotPasswordButton
+            activeOpacity={0.7}
+            onPress={handleForgotPassword}
+          >
             <ForgotPasswordLabel>Esqueci minha senha</ForgotPasswordLabel>
           </ForgotPasswordButton>
 
