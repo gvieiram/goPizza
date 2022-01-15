@@ -8,6 +8,7 @@ import AppLoading from 'expo-app-loading';
 import { StatusBar } from 'expo-status-bar';
 
 import { AuthProvider } from '@hooks/auth';
+import { Home } from '@screens/Home';
 import { Product } from '@screens/Product';
 import SignIn from '@screens/SignIn';
 
@@ -28,7 +29,8 @@ export default function App() {
       <StatusBar style="light" translucent backgroundColor="transparent" />
       <AuthProvider>
         {/* <SignIn /> */}
-        <Product />
+        {/* <Product /> */}
+        <Home />
       </AuthProvider>
     </ThemeProvider>
   );
