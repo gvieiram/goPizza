@@ -13,7 +13,10 @@ export const Placeholder = styled.View`
   justify-content: center;
   align-items: center;
 
-  border: 1px dashed ${({ theme }) => theme.COLORS.SECONDARY_900};
+  ${({ theme }) => css`
+    border: 1px dashed ${theme.COLORS.SECONDARY_900};
+    background-color: ${theme.COLORS.BACKGROUND_WHITE};
+  `}
 `;
 
 export const PlaceholderTitle = styled.Text`

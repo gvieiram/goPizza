@@ -5,7 +5,12 @@ import styled, { css } from 'styled-components/native';
 export const Container = styled.View`
   width: 100%;
   height: 56px;
-  border: 1px solid ${({ theme }) => theme.COLORS.SHAPE};
+
+  ${({ theme }) => css`
+    background-color: ${theme.COLORS.BACKGROUND_WHITE};
+    border: 1px solid ${theme.COLORS.SHAPE};
+  `}
+
   border-radius: 12px;
   margin-bottom: 8px;
   flex-direction: row;
