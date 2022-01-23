@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Alert, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import firestore from '@react-native-firebase/firestore';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useTheme } from 'styled-components/native';
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -21,6 +22,7 @@ import {
   GreetingText,
   MenuHeader,
   MenuItemsNumber,
+  NewProductButton,
 } from './styles';
 
 export function Home() {
@@ -28,6 +30,7 @@ export function Home() {
   const [search, setSearch] = useState('');
 
   const { COLORS } = useTheme();
+  const navigation = useNavigation();
 
   function fetchPizzas(value: string) {
     const formattedValue = value.toLocaleLowerCase().trim();
@@ -61,9 +64,19 @@ export function Home() {
     fetchPizzas('');
   }
 
-  useEffect(() => {
-    fetchPizzas('');
-  }, []);
+  function handleOpen(id: string) {
+    navigation.navigate('product', { id });
+  }
+
+  function handleAdd() {
+    navigation.navigate('product', {});
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPizzas('');
+    }, []),
+  );
 
   return (
     <Container>
@@ -95,13 +108,21 @@ export function Home() {
       <FlatList
         data={pizzas}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => <ProductCard data={item} />}
+        renderItem={({ item }) => (
+          <ProductCard data={item} onPress={() => handleOpen(item.id)} />
+        )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingTop: 20,
           paddingBottom: 125,
           marginHorizontal: 24,
         }}
+      />
+
+      <NewProductButton
+        title="Cadastrar Pizza"
+        type="secondary"
+        onPress={handleAdd}
       />
     </Container>
   );
