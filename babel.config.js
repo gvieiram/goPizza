@@ -20,6 +20,7 @@ module.exports = function(api) {
             '@assets': './src/assets',
             '@hooks': './src/hooks',
             '@routes': './src/routes',
+            '@utils': './src/utils',
           }
         }
       ]
