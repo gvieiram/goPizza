@@ -50,9 +50,10 @@ export function Home() {
         }) as ProductProps[];
         setPizzas(data);
       })
-      .catch(() =>
-        Alert.alert('Consulta', 'Não foi possível realizar a consulta '),
-      );
+      .catch(err => {
+        Alert.alert('Consulta', 'Não foi possível realizar a consulta ');
+        console.log(err);
+      });
   }
 
   function handleSearch() {

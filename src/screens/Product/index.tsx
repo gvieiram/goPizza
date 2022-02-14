@@ -68,7 +68,7 @@ export function Product() {
     }
   }
 
-  async function handleAdd() {
+  function validatePizza() {
     if (!image) {
       Alert.alert('Cadastro', 'Selecione a imagem da pizza!');
     } else if (!name.trim()) {
@@ -79,33 +79,72 @@ export function Product() {
       Alert.alert('Cadastro', 'Informe o preço de todos os tamanhos da pizza!');
     } else {
       setIsLoading(true);
-
-      const fileName = new Date().getTime();
-      const reference = storage().ref(`/pizzas/${fileName}.png`);
-
-      await reference.putFile(image);
-      const photo_url = await reference.getDownloadURL();
-
-      firestore()
-        .collection('pizzas')
-        .add({
-          name,
-          name_insensitive: name.toLowerCase().trim(),
-          description,
-          prices_sizes: {
-            p: priceSizeP,
-            m: priceSizeM,
-            g: priceSizeG,
-          },
-          photo_url,
-          photo_path: reference.fullPath,
-        })
-        .then(() => navigation.navigate('home'))
-        .catch(() => {
-          setIsLoading(false);
-          Alert.alert('Cadastro', 'Não foi possível cadastrar a pizza.');
-        });
     }
+  }
+
+  async function handleAdd() {
+    validatePizza();
+
+    const fileName = new Date().getTime();
+    const reference = storage().ref(`/pizzas/${fileName}.png`);
+
+    await reference.putFile(image);
+    const photo_url = await reference.getDownloadURL();
+
+    firestore()
+      .collection('pizzas')
+      .add({
+        name,
+        name_insensitive: name.toLowerCase().trim(),
+        description,
+        prices_sizes: {
+          p: priceSizeP,
+          m: priceSizeM,
+          g: priceSizeG,
+        },
+        photo_url,
+        photo_path: reference.fullPath,
+      })
+      .then(() => navigation.navigate('home'))
+      .catch(() => {
+        setIsLoading(false);
+        Alert.alert('Cadastro', 'Não foi possível cadastrar a pizza.');
+      });
+  }
+
+  async function handleUpdate() {
+    validatePizza();
+
+    // const fileName = new Date().getTime();
+    // const reference = storage().ref(`/pizzas/${fileName}.png`);
+
+    // await reference.putFile(image);
+    // const photo_url = await reference.getDownloadURL();
+
+    // if (image !== image) {
+    //   console.log('teste');
+    // }
+
+    firestore()
+      .collection('pizzas')
+      .doc(id)
+      .update({
+        name,
+        name_insensitive: name.toLowerCase().trim(),
+        description,
+        prices_sizes: {
+          p: priceSizeP,
+          m: priceSizeM,
+          g: priceSizeG,
+        },
+        // photo_url,
+        // photo_path: reference.fullPath,
+      })
+      .then(() => navigation.navigate('home'))
+      .catch(() => {
+        setIsLoading(false);
+        Alert.alert('Atualização', 'Não foi possível atualizar a pizza.');
+      });
   }
 
   function handleBack() {
@@ -163,13 +202,13 @@ export function Product() {
         <Upload>
           <Photo uri={image} />
 
-          {!id && (
-            <PickImageButton
-              title="Carregar"
-              type="secondary"
-              onPress={handlePickerImage}
-            />
-          )}
+          {/* {id && (              Esconder somente para nao admin */}
+          <PickImageButton
+            title="Carregar"
+            type="secondary"
+            onPress={handlePickerImage}
+          />
+          {/* )} */}
         </Upload>
 
         <Form>
@@ -215,14 +254,12 @@ export function Product() {
             />
           </InputGroup>
 
-          {!id && (
-            <Button
-              title="Cadastrar Pizza"
-              style={{ marginBottom: 25 }}
-              isLoading={isLoading}
-              onPress={handleAdd}
-            />
-          )}
+          <Button
+            title={id ? 'Atualizar Pizza' : 'Cadastrar Pizza'}
+            style={{ marginBottom: 25 }}
+            isLoading={isLoading}
+            onPress={id ? handleUpdate : handleAdd}
+          />
         </Form>
       </ScrollView>
     </Container>
