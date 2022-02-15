@@ -12,6 +12,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import happyEmoji from '@assets/happy.png';
 import { ProductCard, ProductProps } from '@components/ProductCard';
 import { Search } from '@components/Search';
+import { useAuth } from '@src/hooks/auth';
 
 import {
   Container,
@@ -31,6 +32,7 @@ export function Home() {
 
   const { COLORS } = useTheme();
   const navigation = useNavigation();
+  const { signOut } = useAuth();
 
   function fetchPizzas(value: string) {
     const formattedValue = value.toLocaleLowerCase().trim();
@@ -87,7 +89,7 @@ export function Home() {
           <GreetingText>Olá, Admin</GreetingText>
         </Greeting>
 
-        <TouchableOpacity activeOpacity={0.4}>
+        <TouchableOpacity activeOpacity={0.4} onPress={() => signOut()}>
           <MaterialIcons name="logout" color={COLORS.TITLE} size={24} />
         </TouchableOpacity>
       </Header>

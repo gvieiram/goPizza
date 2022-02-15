@@ -27,6 +27,8 @@ export const Container = styled(TextInput).attrs<Props>(({ theme, type }) => ({
     color: ${type === 'primary'
       ? theme.COLORS.SECONDARY_900
       : theme.COLORS.TITLE};
-    background-color: ${theme.COLORS.BACKGROUND_WHITE};
+    background-color: ${type === 'primary'
+      ? theme.COLORS.BACKGROUND_WHITE
+      : 'transparent'};
   `}
 `;
