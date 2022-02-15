@@ -9,7 +9,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { AuthProvider } from '@hooks/auth';
 import { Routes } from '@src/routes';
-import { Order } from '@src/screens/Order';
+import { Orders } from '@src/screens/Orders';
 import theme from '@src/theme';
 
 export default function App() {
@@ -26,7 +26,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <StatusBar style="light" translucent backgroundColor="transparent" />
       <AuthProvider>
-        <Order />
+        <Orders />
       </AuthProvider>
     </ThemeProvider>
   );

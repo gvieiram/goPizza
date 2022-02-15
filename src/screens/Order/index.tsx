@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
 import React, { useState } from 'react';
 import { Platform, ScrollView } from 'react-native';
 
@@ -63,9 +65,22 @@ export function Order() {
             </InputGroup>
           </FormRow>
 
-          <Price>Valor de R$ 50,00</Price>
+          {size !== '' ? (
+            PIZZA_TYPES.map(item => {
+              if (size === item.id) {
+                return (
+                  <Price key={item.id}>{`Valor de R$${item.price}`}</Price>
+                );
+              }
+            })
+          ) : (
+            <Price>Valor de R$ 00,00</Price>
+          )}
 
-          <Button title="Confirmar Pedido" />
+          <Button
+            title="Confirmar Pedido"
+            // onPress={() => console.log(size)}
+          />
         </Form>
       </ScrollView>
     </Container>
